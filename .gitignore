@@ -1,0 +1,5 @@
+.idea
+app_python/venv
+**/__pycache__
+app_python/src/static
+app_python/src/db.sqlite3
