@@ -8,9 +8,13 @@ from rest_framework.views import APIView
 
 
 def index(request: HttpRequest):
-    return render(request, 'index.html', {'current_time': datetime.datetime.now().isoformat()})
+    return render(request, 'index.html', {
+        'current_time': datetime.datetime.now(datetime.timezone.utc).isoformat()
+    })
 
 
 @api_view()
 def current_time(request):
-    return Response({"current_time": datetime.datetime.now().isoformat()})
+    return Response({
+        "current_time": datetime.datetime.now(datetime.timezone.utc).isoformat()
+    })
