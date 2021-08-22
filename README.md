@@ -5,6 +5,11 @@
 
 This repo contains a PoC app named "Time Server" for the first week DevOps labs.
 
+## Usage
+The simplest way to use app is to use Docker. There's `docker-compose` file in the root of repository.
+
+Pre-built image is located at [DockerHub](https://hub.docker.com/repository/docker/iammaxim/devops).
+
 ## Repo structure
  - `app_kotlin` — contains app implemented in Kotlin language. Details are located below.
  - `app_python` — contains app implemented in Python language. Details are located below.
