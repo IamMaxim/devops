@@ -23,4 +23,13 @@ As for the best practices:
  - Carrying heavy DBMS around with no actual data sounds ridiculous to me. So I used \*lightweight\* SQLite (SQL DBMS is required for Django to store the basic information about project environment, so it is not possible to get rid of it completely).
  - Time is returned in ISO format, so both humans and crawlers may universally read/parse it.
 
-## 
+## 3. Testing
+
+Django has built-in testing framework, which has been used in this app. Since Django itself is greatly covered by tests, its documentation explicitly states that developers should NOT test the Django functionality. Developers should check their own code (i.e. business logic).
+
+As our app only has one action — return time — I tested that index page returns with 200 status code and API call returns time with maximum offset of 1 second and return code 200.
+
+Best practices:
+  - Don't test the framework, test your code
+  - Maximize coverage (I covered everything not related to Django boilerplate code)
+

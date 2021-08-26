@@ -5,3 +5,6 @@ services:
     image: 'iammaxim/devops:latest'
     ports:
       - 8000:8000
+# You may uncomment this to use docker-compose environment for development.
+#    volumes:
+#      - ./app_python/src:/app/src
