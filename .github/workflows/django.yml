@@ -16,16 +16,20 @@ jobs:
         python-version: [ 3.7, 3.8, 3.9 ]
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out source code
+        uses: actions/checkout@v2
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install Dependencies
         run: |
           cd app_python
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
       - name: Run Tests
         run: |
           cd app_python/src
@@ -46,6 +50,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Check out source code
+        uses: actions/checkout@v2
 
       - name: Build and push
         id: docker_build
