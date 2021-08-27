@@ -3,6 +3,8 @@
 > <br>
 > Maxim Stepanov, BS18-SE-01
 
+![example workflow](https://github.com/iammaxim/devops/actions/workflows/django.yml/badge.svg)
+
 This repo contains a PoC app named "Time Server" for the first week DevOps labs.
 
 ## Usage
