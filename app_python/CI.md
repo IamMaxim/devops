@@ -24,3 +24,18 @@ Badge in the README reflects the status of last CI launch.
 - Automatic testing: although CI allows building project without testing, it is always good to implement self-testing to at least detect regressions.
 - Automatic deployment (first step): built images are pushed to DockerHub, so (future) runner will be able to automatically check out new version and restart.
 - Isolated builds: GitHub runs its CI actions in isolated containers, so the environment is reproducible and side-effect-less.
+
+## Jenkins
+
+Command to start up test Jenkins environment:
+
+```docker run --rm --name jenkins -p 8080:8080 -p 50000:50000 -u 0 -v `pwd`:/var/jenkins_home -v "/var/run/docker.sock:/var/run/docker.sock" jenkinsci/blueocean```
+
+You should also install Docker and Docker Pipeline plugins.
+
+### Best Jenkins practices
+
+- Don't build on master server. It is insecure, since commits/pipelines may execute malicious code. Instead, we use isolated Docker images as an environment for running pipelines.
+
+
+
