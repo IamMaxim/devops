@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'python:3.6-alpine'
+            image 'python:3.9.6-bullseye'
             args '-u root:root'
         }
     }
