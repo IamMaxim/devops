@@ -7,8 +7,8 @@ terraform {
   }
 }
 
-resource "vagrant_vm" "timeserver_python_vm" {
-  vagrantfile_dir = "../vagrant/"
+resource "vagrant_vm" "timeserver_python_dev_vm" {
+  vagrantfile_dir = "../vagrant_dev/"
   env = {}
   get_ports = true
 }

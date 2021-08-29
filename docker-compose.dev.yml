@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  python:
+    image: 'iammaxim/devops:latest'
+    ports:
+      - "8000:8000"
+    # Bind project directory to allow real-time reload during development
+    volumes:
+      - ./app_python/src:/app/src
