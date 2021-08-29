@@ -3,3 +3,8 @@ app_python/venv
 **/__pycache__
 app_python/src/static
 app_python/src/db.sqlite3
+vagrant/.vagrant
+terraform/.terraform
+terraform/.terraform.lock.hcl
+jenkins
+vagrant/ubuntu-bionic-18.04-cloudimg-console.log
