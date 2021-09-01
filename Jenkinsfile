@@ -28,16 +28,18 @@ pipeline {
 
         stage('Push Docker image') {
             stage('Push image') {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'docker-hub-credentials',
-                        usernameVariable: 'DOCKER_LOGIN',
-                        passwordVariable: 'DOCKER_PASSWORD'
-                    )
-                ]) {
-                    docker.withRegistry('', 'docker-hub-credentials') {
-                        sh "docker login -u ${USERNAME} -p ${PASSWORD}"
-                        image.push("latest")
+                steps {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'docker-hub-credentials',
+                            usernameVariable: 'DOCKER_LOGIN',
+                            passwordVariable: 'DOCKER_PASSWORD'
+                        )
+                    ]) {
+                        docker.withRegistry('', 'docker-hub-credentials') {
+                            sh "docker login -u ${USERNAME} -p ${PASSWORD}"
+                            image.push("latest")
+                        }
                     }
                 }
             }
