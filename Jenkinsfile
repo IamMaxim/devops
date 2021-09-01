@@ -20,12 +20,6 @@ pipeline {
             }
         }
 
-        stage('Build Docker image') {
-            steps {
-                def	image = docker.build("iammaxim/devops")
-            }
-        }
-
         stage('Push Docker image') {
             steps {
                 withCredentials([
@@ -36,8 +30,11 @@ pipeline {
                     )
                 ]) {
                     docker.withRegistry('', 'docker-hub-credentials') {
-                        sh "docker login -u ${USERNAME} -p ${PASSWORD}"
-                        image.push("latest")
+                        script {
+                            sh "docker login -u ${USERNAME} -p ${PASSWORD}"
+                            image = docker.build("iammaxim/devops")
+                            image.push("latest")
+                        }
                     }
                 }
             }
