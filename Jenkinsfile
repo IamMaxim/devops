@@ -20,17 +20,17 @@ pipeline {
             }
         }
 
-        stage('Push Docker image') {
+        stage('Build and push Docker image') {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'docker-hub-credentials',
-                        usernameVariable: 'DOCKER_LOGIN',
-                        passwordVariable: 'DOCKER_PASSWORD'
-                    )
-                ]) {
-                    docker.withRegistry('', 'docker-hub-credentials') {
-                        script {
+                script {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'docker-hub-credentials',
+                            usernameVariable: 'DOCKER_LOGIN',
+                            passwordVariable: 'DOCKER_PASSWORD'
+                        )
+                    ]) {
+                        docker.withRegistry('', 'docker-hub-credentials') {
                             sh "docker login -u ${USERNAME} -p ${PASSWORD}"
                             image = docker.build("iammaxim/devops")
                             image.push("latest")
