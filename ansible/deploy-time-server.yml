@@ -1,0 +1,5 @@
+---
+- name: "Deploy Time Server with docker-compose"
+  hosts: all
+  roles:
+    - app_python
