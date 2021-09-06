@@ -9,9 +9,9 @@ terraform/.terraform.lock.hcl
 jenkins
 vagrant/ubuntu-bionic-18.04-cloudimg-console.log
 /terraform/terraform.tfstate.d/
-/terraform_dev/terraform.tfstate.backup
-/terraform_dev/terraform.tfstate
-/terraform_dev/.terraform.lock.hcl
-/terraform_dev/.terraform/
-/vagrant_dev/ubuntu-bionic-18.04-cloudimg-console.log
-/vagrant_dev/.vagrant/
+/terraform/terraform_dev/terraform.tfstate.backup
+/terraform/terraform_dev/terraform.tfstate
+/terraform/terraform_dev/.terraform.lock.hcl
+/terraform/terraform_dev/.terraform/
+/vagrant/dev/ubuntu-bionic-18.04-cloudimg-console.log
+/vagrant/dev/.vagrant/

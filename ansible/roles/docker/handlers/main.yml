@@ -1,0 +1,8 @@
+# Inspired by Jeff Geerling's Docker role
+
+# Handlers allow to automatically restart Docker service as soon as state (variables, etc.) is changed.
+---
+- name: restart docker
+  service: "name=docker state={{ docker_restart_handler_state }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+  
