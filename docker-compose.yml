@@ -13,7 +13,7 @@ services:
   python:
     image: 'iammaxim/devops:latest'
     ports:
-      - "8000:80"
+      - "8000:8000"
     networks:
       # We need to monitor this service, so it is added to monitoring network as well
       - monitoring
