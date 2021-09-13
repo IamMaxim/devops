@@ -15,3 +15,4 @@ vagrant/ubuntu-bionic-18.04-cloudimg-console.log
 /terraform/terraform_dev/.terraform/
 /vagrant/dev/ubuntu-bionic-18.04-cloudimg-console.log
 /vagrant/dev/.vagrant/
+docker_workdir/

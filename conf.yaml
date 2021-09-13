@@ -1,0 +1,10 @@
+# - endpoint: "/photo" - serviced endpoint
+#    status: 200 - http status, 200 by default
+#    size: 100 - size in bytes. you can define random value from m..n, example 100..200
+#    time: 100 - time in milliseconds you can define random value from m..n, example 100..200
+#    wight: 1 - how often will be requested
+endpoints:
+#   # statuses
+  - endpoint: "/current_time/"
+    status: 200
+    weight: 1
