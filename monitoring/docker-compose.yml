@@ -36,6 +36,11 @@ services:
       - monitoring
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      driver: "local"
+      options:
+        max-size: "10m"
+    mem_limit: 512m
 
   grafana:
     build:
@@ -62,6 +67,11 @@ services:
       - monitoring
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      driver: "local"
+      options:
+        max-size: "10m"
+    mem_limit: 512m
 
   promtail:
     image: grafana/promtail:${LOKI_VERSION}
@@ -80,6 +90,11 @@ services:
       - monitoring
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      driver: "local"
+      options:
+        max-size: "10m"
+    mem_limit: 512m
 
   loki:
     image: grafana/loki:${LOKI_VERSION}
@@ -96,5 +111,10 @@ services:
       - monitoring
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      driver: "local"
+      options:
+        max-size: "10m"
+    mem_limit: 512m
 
 
