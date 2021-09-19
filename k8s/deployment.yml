@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timeserver
+  labels:
+    app: timeserver
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: timeserver
+  template:
+    metadata:
+      labels:
+        app: timeserver
+    spec:
+      containers:
+      - name: timeserver
+        image: iammaxim/devops:latest
+        ports:
+        - containerPort: 8000
