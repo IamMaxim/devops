@@ -1,22 +1,29 @@
 # Kubernetes
 
 I decided (with the permission of @creed_dmitriy) to go with Kubeadm-based cluster instead of the Minikube distribution,
-as I'm currently migrating my personal services to Kubernetes. Although this is a more painful process, this way I have a cluster suitable for more than just a single lab exercise.
+as I'm currently migrating my personal services to Kubernetes. Although this is a more painful process, this way I have
+a cluster suitable for more than just a single lab exercise.
 
 To make sure we are on the same ground, my cluster contains:
-  - A single Kubernetes node hosted on Scaleway VPS (with "master" label lifted off to allow scheduling on master node in such setup). More nodes are to be added in the future.
-  - Calico as a network addon.
-  - MetalLB as a load balancer to expose services to outside network.
-  - Ingress NGINX as Ingress addon.
-  - Cert-Manager as certificate issuer (actually, ClusterIssuer, to allow usage from all namespaces. Despite all security risks, as this is my personal cluster, I know what I deploy there) to automatically sign TLS certificates for my Ingress resources via Let's Encrypt.
+
+- A single Kubernetes node hosted on Scaleway VPS (with "master" label lifted off to allow scheduling on master node in
+  such setup). More nodes are to be added in the future.
+- Calico as a network addon.
+- MetalLB as a load balancer to expose services to outside network.
+- Ingress NGINX as Ingress addon.
+- Cert-Manager as certificate issuer (actually, ClusterIssuer, to allow usage from all namespaces. Despite all security
+  risks, as this is my personal cluster, I know what I deploy there) to automatically sign TLS certificates for my
+  Ingress resources via Let's Encrypt.
 
 I also have several personal deployments (Trilium and GitLab Runner), so they will appear later in command outputs.
 
-Please note that MetalLB has its own pool of addresses, which are displayed in "External IP" field of command outputs. Traffic from actual network interface exposed to Internet is routed to these addresses.
+Please note that MetalLB has its own pool of addresses, which are displayed in "External IP" field of command outputs.
+Traffic from actual network interface exposed to Internet is routed to these addresses.
 
 ---
 
 ## Manual deployment via kubectl
+
 This is obviously a disgusting way to manage a cluster, but let's start with it:
 
 ```shell
@@ -25,6 +32,7 @@ kubectl expose deployment timeserver --type=LoadBalancer --port=8000
 ```
 
 The output of pod list:
+
 ```
 > kubectl get pods --all-namespaces
 
@@ -53,6 +61,7 @@ trilium                trilium-0                                      1/1     Ru
 ```
 
 The output of service list:
+
 ```
 > kubectl get services --all-namespaces
 
@@ -90,9 +99,10 @@ Of course, the right way is through YAML-engineering (declarative description of
 
 I created `deployment.yml` and `service.yml` and applied them with `kubectl apply -f <file.yml>`.
 
-As a result, I have 3 replica pods. 
+As a result, I have 3 replica pods.
 
 Output of commands:
+
 ```
 > kubectl get pods --all-namespaces 
    
@@ -141,29 +151,110 @@ trilium                trilium-headless                     ClusterIP      None 
 ```
 
 ## Bonus tasks
+
 The time has come for my first bonus task!
 
 ---
 
-Ingress is a kind of router/load balancer that allows traffic from the edge node to be distributed to pods in the entire cluster (even on other nodes, which are not exposed to the internet directly). This is available thanks to the network layer which connects the entire cluster. It has features similar to NGINX: selecting target pod based on hostname, URL regexes, etc. Ingress itself is useless, it is just a resource. It should be used in conjunction with Ingress Controller.
+Ingress is a kind of router/load balancer that allows traffic from the edge node to be distributed to pods in the entire
+cluster (even on other nodes, which are not exposed to the internet directly). This is available thanks to the network
+layer which connects the entire cluster. It has features similar to NGINX: selecting target pod based on hostname, URL
+regexes, etc. Ingress itself is useless, it is just a resource. It should be used in conjunction with Ingress
+Controller.
 
 ---
 
-Ingress Controller. In order to use Ingress, the traffic should be handled by an Ingress Controller, which decides which Ingress resource should be used for a particular connection. This is the controller that actually performs the logic.
+Ingress Controller. In order to use Ingress, the traffic should be handled by an Ingress Controller, which decides which
+Ingress resource should be used for a particular connection. This is the controller that actually performs the logic.
 
 In my cluster, Ingress NGINX controller is used, which is officially supported by the Kubernetes project.
 
 ---
 
-StatefulSet. Initially, Kubernetes was intended to only run stateless apps (usually microservices). It later became clear, though, that stateful apps may be supported as well, so separate resource type was added — StatefulSet. It allows associating pods with their dedicated state, mostly PersistentVolumes. In StatefulSet, during pod creation, the stateful claims are uniquely associated with that specific pod, and even in case the pod is rescheduled to another node, this state is transferred with it.
+StatefulSet. Initially, Kubernetes was intended to only run stateless apps (usually microservices). It later became
+clear, though, that stateful apps may be supported as well, so separate resource type was added — StatefulSet. It allows
+associating pods with their dedicated state, mostly PersistentVolumes. In StatefulSet, during pod creation, the stateful
+claims are uniquely associated with that specific pod, and even in case the pod is rescheduled to another node, this
+state is transferred with it.
 
-Actually, in my cluster, I have Trilium notes deployed, which stores its data in a volume. It has a StatefulSet with one pod and PersistentVolume along with PersistentVolumeClaim.
+Actually, in my cluster, I have Trilium notes deployed, which stores its data in a volume. It has a StatefulSet with one
+pod and PersistentVolume along with PersistentVolumeClaim.
 
 ---
 
-DaemonSet — kind of deployment where each node has exactly one running pod of this set. An example — coredns, Kubernetes' internal DNS resolver, which should be present on each node, but exactly once. Or Calico, which interconnects nodes with a network layer.
+DaemonSet — kind of deployment where each node has exactly one running pod of this set. An example — coredns,
+Kubernetes' internal DNS resolver, which should be present on each node, but exactly once. Or Calico, which
+interconnects nodes with a network layer.
 
 ---
 
-PersistentVolume — basically, a Docker volume that is associated with specific pod. It may have different access modes — for example, only one pod may use it at a time, or several pods may use it simultaneously. Once a persistent volume is claimed by pod with PersistentVolumeClaim, most of the options become unchangeable. This, only volume deletion and recreation allows to modify its options.
+PersistentVolume — basically, a Docker volume that is associated with specific pod. It may have different access modes —
+for example, only one pod may use it at a time, or several pods may use it simultaneously. Once a persistent volume is
+claimed by pod with PersistentVolumeClaim, most of the options become unchangeable. This, only volume deletion and
+recreation allows to modify its options.
 
+---
+
+# Lab 10
+
+As I do not have Minikube, I skipped related steps.
+
+As for Helm chart values: in addition to fields specified in the lab assignment, I also disabled ServiceAccount and
+enabled Ingress, specifying related annotations in order to use my other deployed resources.
+
+Output of the command:
+
+```
+> kubectl get pods,svc --all-namespaces
+
+NAMESPACE              NAME                                               READY   STATUS    RESTARTS   AGE
+cert-manager           pod/cert-manager-848f547974-blfhs                  1/1     Running   0          45h
+cert-manager           pod/cert-manager-cainjector-54f4cc6b5-qbk8s        1/1     Running   0          45h
+cert-manager           pod/cert-manager-webhook-58fb868868-c6cpw          1/1     Running   0          45h
+default                pod/ingress-nginx-controller-4bz9j                 1/1     Running   0          47h
+default                pod/timeserver-b6b69fcff-pjzgq                     1/1     Running   0          9m13s
+gitlab-runner          pod/gitlab-runner-gitlab-runner-6cbd47dc74-6pn8l   1/1     Running   0          14d
+kube-system            pod/calico-kube-controllers-5f6cfd688c-6c2jj       1/1     Running   0          15d
+kube-system            pod/calico-node-2g7rx                              1/1     Running   0          15d
+kube-system            pod/coredns-74ff55c5b-bxwsc                        1/1     Running   0          15d
+kube-system            pod/coredns-74ff55c5b-fjb6d                        1/1     Running   0          15d
+kube-system            pod/etcd-mwp-master                                1/1     Running   0          15d
+kube-system            pod/kube-apiserver-mwp-master                      1/1     Running   0          15d
+kube-system            pod/kube-controller-manager-mwp-master             1/1     Running   0          15d
+kube-system            pod/kube-proxy-khqpl                               1/1     Running   0          15d
+kube-system            pod/kube-scheduler-mwp-master                      1/1     Running   0          15d
+kube-system            pod/metrics-server-65f8747c84-m7k69                1/1     Running   0          15d
+kubernetes-dashboard   pod/dashboard-metrics-scraper-7b59f7d4df-28tsn     1/1     Running   0          15d
+kubernetes-dashboard   pod/kubernetes-dashboard-74d688b6bc-wbkcg          1/1     Running   0          15d
+metallb-system         pod/controller-6b78bff7d9-pktnw                    1/1     Running   0          47h
+metallb-system         pod/speaker-pdnvs                                  1/1     Running   0          47h
+trilium                pod/trilium-0                                      1/1     Running   0          46h
+
+NAMESPACE              NAME                                         TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)                      AGE
+cert-manager           service/cert-manager                         ClusterIP      10.110.145.31    <none>          9402/TCP                     45h
+cert-manager           service/cert-manager-webhook                 ClusterIP      10.103.159.235   <none>          443/TCP                      45h
+default                service/ingress-nginx-controller             LoadBalancer   10.103.230.22    192.168.1.240   80:31064/TCP,443:30319/TCP   47h
+default                service/ingress-nginx-controller-admission   ClusterIP      10.99.212.226    <none>          443/TCP                      47h
+default                service/kubernetes                           ClusterIP      10.96.0.1        <none>          443/TCP                      15d
+default                service/timeserver                           LoadBalancer   10.110.136.66    192.168.1.241   8000:32427/TCP               9m14s
+kube-system            service/kube-dns                             ClusterIP      10.96.0.10       <none>          53/UDP,53/TCP,9153/TCP       15d
+kube-system            service/metrics-server                       ClusterIP      10.96.160.192    <none>          443/TCP                      15d
+kubernetes-dashboard   service/dashboard-metrics-scraper            ClusterIP      10.109.112.168   <none>          8000/TCP                     15d
+kubernetes-dashboard   service/kubernetes-dashboard                 ClusterIP      10.98.73.0       <none>          443/TCP                      15d
+trilium                service/trilium                              ClusterIP      10.111.73.236    <none>          80/TCP                       46h
+trilium                service/trilium-headless                     ClusterIP      None             <none>          80/TCP                       46h
+```
+
+The liveness probe uses `/` to check if pod is fine. And it is fine.
+
+And since I have Ingress set up, I can also access Time Server using the web browser (with HTTPS certificate!):
+
+![Working Helm chart](../images/working_helm_chart.png)
+
+## Bonus task
+
+Library chart — a type of chart that is used to separate common parts for other charts in a single place. Such charts
+may not be installed, but may be used in application charts to include handy resources using the directive `include`. An
+example use case is separating cluster-specific values from all other charts, so editing them in one place will affect
+all other charts at the same time, minimizing routine and human-factor mistakes. And, of course, maximizing the code
+cleanness!

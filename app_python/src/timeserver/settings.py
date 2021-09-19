@@ -26,8 +26,7 @@ SECRET_KEY = 'django-insecure-qhs$u$3kom+@0pacd(2*slfl)5-*0%pwfrd&bjw#bc*84ne$5^
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "mywarmplace.net",
-    "localhost",
+    "*",
 ]
 
 
