@@ -18,7 +18,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path
 from rest_framework.routers import SimpleRouter
 
-from timeserver.timeserver.views import index, current_time
+from timeserver.timeserver.views import index, current_time, visits
 
 # router = SimpleRouter()
 # router.register("current_time", )
@@ -26,6 +26,7 @@ from timeserver.timeserver.views import index, current_time
 urlpatterns = [
     path("", index),
     path("current_time/", current_time),
+    path("visits/", visits),
     path('admin/', admin.site.urls),
 ] + staticfiles_urlpatterns()
 

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: timeserver-config
+data:
+  config.json: |
+    {{ printf "files/config.json" | .Files.Get | nindent 6 }}

@@ -10,3 +10,5 @@ services:
       options:
         max-size: "10m"
     mem_limit: 256m
+    volumes:
+    - "./timeserver_data:/volume"

@@ -8,3 +8,4 @@ services:
     # Bind project directory to allow real-time reload during development
     volumes:
       - ./app_python/src:/app/src
+      - "./timeserver_data:/volume"
