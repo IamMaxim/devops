@@ -10,6 +10,7 @@ image:
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
+  podManagementPolicy: "Parallel"
 
 imagePullSecrets: []
 nameOverride: "timeserver"
@@ -38,9 +39,12 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+storage:
+  storageClassName: "nfs-reliable"
+
 service:
   type: ClusterIP
-  port: 80
+  port: 8000
 
 ingress:
   enabled: true
@@ -65,10 +69,10 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 1
+    cpu: 0.5
     memory: 128Mi
   requests:
-    cpu: 1
+    cpu: 0.5
     memory: 128Mi
 
 autoscaling:

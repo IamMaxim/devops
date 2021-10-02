@@ -10,7 +10,7 @@ spec:
   ports:
     - name: http
       port: {{ .Values.service.port }}
-      targetPort: 8000
+      targetPort: {{ .Values.service.port }}
       protocol: TCP
   selector:
     {{- include "timeserver-chart.selectorLabels" . | nindent 4 }}
