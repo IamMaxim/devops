@@ -7,11 +7,18 @@ from rest_framework.response import Response
 
 
 def index(request: HttpRequest):
-    with open("/volume/visits", 'r') as f:
-        visits = int(f.readline()) + 1
-        print(visits)
-    with open("/volume/visits", 'w') as f:
-        f.write(str(visits))
+    visits = 0
+    try:
+        with open("/volume/visits", 'r') as f:
+            visits = int(f.readline()) + 1
+            print(visits)
+    except:
+        pass
+    try:
+        with open("/volume/visits", 'w') as f:
+            f.write(str(visits))
+    except:
+        pass
 
     return render(request, 'index.html', {
         'current_time': datetime.datetime.now(datetime.timezone.utc).isoformat()

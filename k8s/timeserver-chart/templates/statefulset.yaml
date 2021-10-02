@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: timeserver
+spec:
+  serviceName: {{ template "timeserver-chart.fullname" . }}
+  replicas: 3
+  podManagementPolicy: "Parallel"
+  selector:
+    matchLabels:
+      {{- include "timeserver-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "timeserver-chart.selectorLabels" . | nindent 8}}
+    spec:
+      containers:
+      - name: {{ template "timeserver-chart.fullname" . }}
+        image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+        volumeMounts:
+        - name: config-volume
+          subPath: config.json
+          mountPath: /app/config.json
+        - name: timeserver-volume
+          mountPath: /volume
+      volumes:
+      - name: config-volume
+        configMap:
+          name: timeserver-config
+
+  volumeClaimTemplates:
+  - metadata:
+      name: timeserver-volume
+    spec:
+      accessModes:
+        - "ReadWriteOnce"
+      resources:
+        requests:
+          storage: 32Mi
+      storageClassName: "nfs-reliable"
