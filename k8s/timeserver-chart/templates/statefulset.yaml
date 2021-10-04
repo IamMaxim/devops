@@ -42,6 +42,17 @@ spec:
       - name: config-volume
         configMap:
           name: timeserver-config
+      initContainers:
+      - name: init-1
+        image: busybox
+        command:
+        - wget
+        - "-O"
+        - "/volume/index.html"
+        - http://info.cern.ch
+        volumeMounts:
+        - name: timeserver-volume
+          mountPath: /volume
 
   volumeClaimTemplates:
   - metadata:
